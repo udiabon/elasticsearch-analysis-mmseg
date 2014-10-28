@@ -26,8 +26,8 @@ public class MMsegTokenizerFactory extends AbstractTokenizerFactory {
 
     Dictionary dic;
     private String seg_type;
-    private boolean forceAddWholeSentence;
-    private int maxLenSentenceToAdd;
+    private boolean createFullNameTerm;
+    private int maxLenFullNameToAdd;
 
     @Inject
     public MMsegTokenizerFactory(Index index, @IndexSettings Settings indexSettings,Environment env, @Assisted String name, @Assisted Settings settings) {
@@ -35,11 +35,11 @@ public class MMsegTokenizerFactory extends AbstractTokenizerFactory {
         String path=new File(env.configFile(),"mmseg").getPath();
         dic = Dictionary.getInstance(path);
         seg_type = settings.get("seg_type", "max_word");
-        forceAddWholeSentence = settings.getAsBoolean("force_add_whole_sentence", Boolean.FALSE).booleanValue();
-        if (forceAddWholeSentence) {
-        	maxLenSentenceToAdd = settings.getAsInt("max_len_sentence_to_add", 6);
-        	if (maxLenSentenceToAdd < 3)
-        		maxLenSentenceToAdd = 3;
+        createFullNameTerm = settings.getAsBoolean("create_full_name_term", Boolean.FALSE).booleanValue();
+        if (createFullNameTerm) {
+        	maxLenFullNameToAdd = settings.getAsInt("max_len_full_name_to_add", 6);
+        	if (maxLenFullNameToAdd < 3)
+        		maxLenFullNameToAdd = 3;
         }
     }
 
@@ -53,8 +53,8 @@ public class MMsegTokenizerFactory extends AbstractTokenizerFactory {
         }else if(seg_type.equals("simple")){
             seg_method =new SimpleSeg(dic);
         }
-        if (forceAddWholeSentence) {
-        	seg_method = new ForceWholeSentenceSeg(dic, seg_method, maxLenSentenceToAdd);
+        if (createFullNameTerm) {
+        	seg_method = new FullNameSeg(dic, seg_method, maxLenFullNameToAdd);
         }
         return  new MMSegTokenizer(seg_method,reader);
     }

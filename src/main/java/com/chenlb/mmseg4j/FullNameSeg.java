@@ -1,22 +1,22 @@
 package com.chenlb.mmseg4j;
 
-public class ForceWholeSentenceSeg extends Seg {
+public class FullNameSeg extends Seg {
 	private Seg seg;
-	private int maxLenSentenceToAdd;
+	private int maxLenFullNameToAdd;
 	
-	public ForceWholeSentenceSeg(Dictionary dic, Seg seg, int maxLenSentenceToAdd) {
+	public FullNameSeg(Dictionary dic, Seg seg, int maxLenFullNameToAdd) {
 		super(dic);
 		this.seg = seg;
-		this.maxLenSentenceToAdd = maxLenSentenceToAdd;
-		if (this.maxLenSentenceToAdd < 3)
-			this.maxLenSentenceToAdd = 3;
+		this.maxLenFullNameToAdd = maxLenFullNameToAdd;
+		if (this.maxLenFullNameToAdd < 3)
+			this.maxLenFullNameToAdd = 3;
 	}
 
 	@Override
 	public Chunk seg(Sentence sen) {
 		char[] text = sen.getText();
 		Chunk chunk = seg.seg(sen);
-		if (text.length <= this.maxLenSentenceToAdd) {
+		if (text.length <= this.maxLenFullNameToAdd) {
 			int wordCount = chunk.getCount();
 			for (int i = 0; i < wordCount; i++) {
 				Word word = chunk.words[i];
